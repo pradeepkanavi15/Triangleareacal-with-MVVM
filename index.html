@@ -1,0 +1,438 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area Calculator</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e0e7ff, #f5f3ff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header .icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            color: #312e81;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .shape-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .shape-btn {
+            padding: 12px 5px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: #ffffff;
+            color: #4b5563;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .shape-btn .shape-icon {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 7px;
+        }
+
+        .shape-btn:hover {
+            border-color: #818cf8;
+        }
+
+        .shape-btn.active {
+            background: #eef2ff;
+            color: #4338ca;
+            border-color: #6366f1;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            color: #374151;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            outline: none;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: #4f46e5;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: 0.2s;
+        }
+
+        .calculate-btn:hover {
+            background: #4338ca;
+        }
+
+        .result {
+            display: none;
+            margin-top: 22px;
+            padding: 18px;
+            background: #eef2ff;
+            border: 1px solid #c7d2fe;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result h3 {
+            font-size: 14px;
+            color: #4338ca;
+            margin-bottom: 8px;
+        }
+
+        .result p {
+            font-size: 23px;
+            font-weight: bold;
+            color: #312e81;
+            overflow-wrap: anywhere;
+        }
+
+        .result.error {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        .result.error h3,
+        .result.error p {
+            color: #b91c1c;
+        }
+
+        .formula {
+            text-align: center;
+            margin-top: 20px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        @media (max-width: 400px) {
+            .container {
+                padding: 22px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .shape-btn {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <header class="header">
+            <div class="icon">📐</div>
+            <h1>Area Calculator</h1>
+            <p>Calculate the area of geometric shapes</p>
+        </header>
+
+        <div class="shape-selector">
+            <button class="shape-btn active"
+                    data-shape="Rectangle"
+                    type="button">
+                <span class="shape-icon">▱</span>
+                Rectangle
+            </button>
+
+            <button class="shape-btn"
+                    data-shape="Circle"
+                    type="button">
+                <span class="shape-icon">◯</span>
+                Circle
+            </button>
+
+            <button class="shape-btn"
+                    data-shape="Triangle"
+                    type="button">
+                <span class="shape-icon">△</span>
+                Triangle
+            </button>
+        </div>
+
+        <form id="calculatorForm">
+
+            <div class="input-group">
+                <label id="firstLabel" for="firstMeasurement">
+                    Length
+                </label>
+
+                <input
+                    type="number"
+                    id="firstMeasurement"
+                    placeholder="Enter length"
+                    min="0"
+                    step="any"
+                    required
+                >
+            </div>
+
+            <div class="input-group" id="secondGroup">
+                <label id="secondLabel" for="secondMeasurement">
+                    Width
+                </label>
+
+                <input
+                    type="number"
+                    id="secondMeasurement"
+                    placeholder="Enter width"
+                    min="0"
+                    step="any"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="calculate-btn">
+                Calculate Area
+            </button>
+
+        </form>
+
+        <section class="result" id="result" aria-live="polite">
+            <h3 id="resultTitle">Calculation Result</h3>
+            <p id="resultValue"></p>
+        </section>
+
+        <div class="formula" id="formula">
+            Formula: Length × Width
+        </div>
+
+    </main>
+
+    <script>
+        const shapeButtons = document.querySelectorAll(".shape-btn");
+
+        const firstInput = document.getElementById("firstMeasurement");
+        const secondInput = document.getElementById("secondMeasurement");
+
+        const firstLabel = document.getElementById("firstLabel");
+        const secondLabel = document.getElementById("secondLabel");
+        const secondGroup = document.getElementById("secondGroup");
+
+        const result = document.getElementById("result");
+        const resultTitle = document.getElementById("resultTitle");
+        const resultValue = document.getElementById("resultValue");
+        const formula = document.getElementById("formula");
+        const calculatorForm = document.getElementById("calculatorForm");
+
+        let selectedShape = "Rectangle";
+
+        const shapeSettings = {
+            Rectangle: {
+                firstLabel: "Length",
+                secondLabel: "Width",
+                firstPlaceholder: "Enter length",
+                secondPlaceholder: "Enter width",
+                formula: "Formula: Length × Width"
+            },
+            Circle: {
+                firstLabel: "Radius",
+                firstPlaceholder: "Enter radius",
+                formula: "Formula: π × Radius²"
+            },
+            Triangle: {
+                firstLabel: "Base",
+                secondLabel: "Height",
+                firstPlaceholder: "Enter base",
+                secondPlaceholder: "Enter height",
+                formula: "Formula: ½ × Base × Height"
+            }
+        };
+
+        function updateShape(shape) {
+            selectedShape = shape;
+
+            shapeButtons.forEach(button => {
+                button.classList.toggle(
+                    "active",
+                    button.dataset.shape === shape
+                );
+            });
+
+            const settings = shapeSettings[shape];
+
+            firstLabel.textContent = settings.firstLabel;
+            firstInput.placeholder = settings.firstPlaceholder;
+
+            firstInput.value = "";
+            secondInput.value = "";
+
+            if (shape === "Circle") {
+                secondGroup.style.display = "none";
+                secondInput.required = false;
+            } else {
+                secondGroup.style.display = "block";
+                secondInput.required = true;
+                secondLabel.textContent = settings.secondLabel;
+                secondInput.placeholder = settings.secondPlaceholder;
+            }
+
+            formula.textContent = settings.formula;
+
+            result.classList.remove("show", "error");
+            resultValue.textContent = "";
+        }
+
+        shapeButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                updateShape(button.dataset.shape);
+            });
+        });
+
+        function formatNumber(number) {
+            return Number(number.toFixed(4)).toString();
+        }
+
+        function calculateArea(event) {
+            event.preventDefault();
+
+            const firstValue = firstInput.value.trim();
+            const secondValue = secondInput.value.trim();
+
+            const first = Number(firstValue);
+            const second = Number(secondValue);
+
+            let area;
+            let errorMessage = "";
+
+            if (
+                firstValue === "" ||
+                !Number.isFinite(first) ||
+                first <= 0
+            ) {
+                errorMessage = "Please enter a valid positive " +
+                    shapeSettings[selectedShape].firstLabel.toLowerCase();
+            } else if (
+                selectedShape !== "Circle" &&
+                (
+                    secondValue === "" ||
+                    !Number.isFinite(second) ||
+                    second <= 0
+                )
+            ) {
+                errorMessage = "Please enter a valid positive " +
+                    shapeSettings[selectedShape].secondLabel.toLowerCase();
+            }
+
+            if (errorMessage) {
+                showResult(errorMessage, true);
+                return;
+            }
+
+            switch (selectedShape) {
+                case "Rectangle":
+                    area = first * second;
+                    break;
+
+                case "Circle":
+                    area = Math.PI * first * first;
+                    break;
+
+                case "Triangle":
+                    area = 0.5 * first * second;
+                    break;
+            }
+
+            if (!Number.isFinite(area)) {
+                showResult("The result is too large to calculate.", true);
+                return;
+            }
+
+            showResult(
+                "Area of " + selectedShape + " = " + formatNumber(area),
+                false
+            );
+        }
+
+        function showResult(message, isError) {
+            resultTitle.textContent = isError
+                ? "Invalid Input"
+                : "Calculation Result";
+
+            resultValue.textContent = message;
+
+            result.classList.add("show");
+            result.classList.toggle("error", isError);
+        }
+
+        calculatorForm.addEventListener("submit", calculateArea);
+    </script>
+
+</body>
+</html>
